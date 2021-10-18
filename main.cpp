@@ -21,8 +21,8 @@ int sc_main(int argc, char *argv[])
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
 //   char * pkt_sender_filename0 = (char*)pkt_sender_outfile_str.c_str();
-   char * pkt_sender_filename0 = (char*)"pkt_sender_outfile0.log";
-   char * pkt_sender_filename1 = (char*)"pkt_sender_outfile1.log";
+   char *pkt_sender_filename0 = (char*)"pkt_sender_outfile0.log";
+   char *pkt_sender_filename1 = (char*)"pkt_sender_outfile1.log";
 
    sc_clock clock1("CLOCK1", 10, SC_NS, 0.5, 0.0, SC_NS);
 
