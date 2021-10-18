@@ -3,7 +3,7 @@
 #include "stdio.h"
 #include <iostream>
 #include "systemc.h"
-#include <memory>
+//#include <memory>
 #include "pkt.h"
 #include "pkt_sender.h"
 #include "pkt_receiver.h"
