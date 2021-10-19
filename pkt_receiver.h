@@ -18,7 +18,10 @@ struct pkt_receiver: sc_module
 		pkt_receiver_file.open("pkt_receiver_file.log");
     SC_THREAD(pkt_receiver_prc);
     dont_initialize();
-    sensitive << pkt_in;
+    sensitive << pkt_in[0];
+    sensitive << pkt_in[1];
+    sensitive << pkt_in[2];
+    sensitive << pkt_in[3];
     first = 1;
   }
   void pkt_receiver_prc();
