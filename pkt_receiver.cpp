@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "pkt.h"
+#include "comm_def.h"
 #include "pkt_receiver.h" 
 
 void pkt_receiver :: pkt_receiver_prc()
