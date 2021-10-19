@@ -16,14 +16,14 @@ using namespace std;
 int sc_main(int argc, char *argv[])
 {
    std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in0;
-   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in1;
-   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_out0;
+//   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in1;
+//   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_out0;
    sc_signal<int>       in_clk_cnt;
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
 //   char * pkt_sender_filename0 = (char*)pkt_sender_outfile_str.c_str();
    char *pkt_sender_filename0 = (char*)"pkt_sender_outfile0.log";
-   char *pkt_sender_filename1 = (char*)"pkt_sender_outfile1.log";
+//   char *pkt_sender_filename1 = (char*)"pkt_sender_outfile1.log";
 
    sc_clock clock1("CLOCK1", 10, SC_NS, 0.5, 0.0, SC_NS);
 
@@ -59,8 +59,8 @@ int sc_main(int argc, char *argv[])
    sc_trace_file *tf = sc_create_vcd_trace_file("Packet");
    sc_trace(tf, clock1, "CLK1");
    sc_trace(tf, pkt_in0, "PKT_IN0");
-   sc_trace(tf, pkt_in1, "PKT_IN1");
-   sc_trace(tf, pkt_out0, "PKT_OUT0");
+//   sc_trace(tf, pkt_in1, "PKT_IN1");
+//   sc_trace(tf, pkt_out0, "PKT_OUT0");
 
    sc_start(0.001,SC_MS);
 
