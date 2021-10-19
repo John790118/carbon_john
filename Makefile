@@ -13,6 +13,10 @@ SOURCES = 	pkt_sender.cpp \
 			pkt_receiver.cpp \
 			fifo.cpp \
 			pkt_sch.cpp \
+			stim.h \
+			stim.cpp \
+			switch_clk.h \
+			switch_clk.cpp \
 			main.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)

@@ -9,15 +9,16 @@
 #include "pkt_receiver.h"
 #include "pkt_switch.h"
 #include "pkt_sch.h"
+#include "comm_def.h"
 using namespace std;
 
 
 int sc_main(int argc, char *argv[])
 {
-   sc_signal<pkt> pkt_in0;
-   sc_signal<pkt> pkt_in1;
-   sc_signal<pkt> pkt_out0;
-
+   sc_signal<pkt_desc>  pkt_in0;
+   sc_signal<pkt_desc>  pkt_in1;
+   sc_signal<pkt_desc>  pkt_out0;
+   sc_signal<int>       in_clk_cnt;
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
 //   char * pkt_sender_filename0 = (char*)pkt_sender_outfile_str.c_str();
@@ -26,26 +27,31 @@ int sc_main(int argc, char *argv[])
 
    sc_clock clock1("CLOCK1", 10, SC_NS, 0.5, 0.0, SC_NS);
 
-   pkt_sender pkt_sender0("PKT_SENDER0");
-   pkt_sender0.pkt_out(pkt_in0);
-   pkt_sender0.CLK(clock1);
-   pkt_sender0.pkt_inprt = 0;
-   pkt_sender0.pkt_sender_filename = pkt_sender_filename0;
+   switch_clk in_clk_cnt_inst("CLK_CNT_INST");
+   in_clk_cnt_inst.in_clk_cnt(in_clk_cnt);
+   in_clk_cnt_inst.CLK(clock1);
 
-   pkt_sender pkt_sender1("PKT_SENDER1");
-   pkt_sender1.pkt_out(pkt_in1);
-   pkt_sender1.CLK(clock1);
-   pkt_sender1.pkt_inprt = 1;
-   pkt_sender1.pkt_sender_filename = pkt_sender_filename1;
+   stim stim0("STIM0");
+   stim0.in_clk_cnt(in_clk_cnt);
+   stim0.out_pkt_stim(pkt_in0);
+   stim0.pkt_inprt = 0;
+   stim0.pkt_sender_filename = pkt_sender_filename0;
 
-   pkt_switch pkt_switch_top("PKT_SWTICH_TOP");
-   pkt_switch_top.clock1(clock1);
-   pkt_switch_top.in0(pkt_in0);
-   pkt_switch_top.in1(pkt_in1);
-   pkt_switch_top.out0(pkt_out0);
+   //stim stim1("STIM1");
+   //stim1.in_clk_cnt(in_clk_cnt);
+   //stim1.out_pkt_stim(pkt_in1);
+   //stim1.pkt_inprt = 1;
+   //stim1.pkt_sender_filename = pkt_sender_filename1;
+
+   //pkt_switch pkt_switch_top("PKT_SWTICH_TOP");
+   //pkt_switch_top.clock1(clock1);
+   //pkt_switch_top.in0(pkt_in0);
+   //pkt_switch_top.in1(pkt_in1);
+   //pkt_switch_top.out0(pkt_out0);
 
    pkt_receiver pkt_receiver0("PKT_RECEIVER0");
-   pkt_receiver0.pkt_in(pkt_out0);
+   pkt_receiver0.pkt_in(pkt_in0);
+   pkt_receiver0.in_clk_cnt(in_clk_cnt);
 
    sc_start(0, SC_NS);
 

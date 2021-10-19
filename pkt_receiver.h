@@ -8,7 +8,8 @@
 
 struct pkt_receiver: sc_module
 {
-  sc_in<pkt> pkt_in;
+  sc_in<pkt_desc> pkt_in;
+  sc_in<int> in_clk_cnt;
   int first;
   ofstream pkt_receiver_file;
   SC_CTOR(pkt_receiver)
