@@ -4,6 +4,7 @@
 #include <time.h>
 #include "pkt.h"
 #include "pkt_sender.h" 
+#include "stim.h"
 #define SEND_FILE_NUM 10
 
 void stim::stim_prc()
