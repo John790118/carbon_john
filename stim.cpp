@@ -7,7 +7,7 @@
 #include "stim.h"
 #define SEND_FILE_NUM 10
 
-void stim::stim_prc()
+void stim :: stim_prc()
 {
     pkt pkt_data;
 

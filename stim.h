@@ -1,7 +1,7 @@
 
 
-#ifndef __PKT_SENDER_H__
-#define __PKT_SENDER_H__
+#ifndef __STIM_H__
+#define __STIM_H__
 
 #include "systemc.h"
 #include "pkt.h"
@@ -40,4 +40,4 @@ struct stim: sc_module
 };
 
 
-#endif
+#endif // _STIM_H_
