@@ -4,6 +4,7 @@
 #define __PKT_RECEIVER_H__
 
 #include "systemc.h"
+#include "comm_def.h"
 #include "pkt.h"
 
 struct pkt_receiver: sc_module
