@@ -4,7 +4,6 @@
 #define __STIM_H__
 
 #include "systemc.h"
-#include "pkt.h"
 #include "comm_def.h" 
 #include <string>
 #include <iostream>

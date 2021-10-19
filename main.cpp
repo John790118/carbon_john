@@ -4,12 +4,11 @@
 #include <iostream>
 #include "systemc.h"
 //#include <memory>
-#include "pkt.h"
-#include "pkt_sender.h"
 #include "pkt_receiver.h"
 #include "pkt_switch.h"
 #include "pkt_sch.h"
 #include "switch_clk.h"
+#include "stim.h"
 #include "comm_def.h"
 using namespace std;
 
