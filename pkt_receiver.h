@@ -8,7 +8,7 @@
 
 struct pkt_receiver: sc_module
 {
-  sc_in<pkt_desc> pkt_in;
+  std::array<sc_in<pkt_desc>, NO_PORTS >  pkt_in;
   sc_in<int> in_clk_cnt;
   int first;
   ofstream pkt_receiver_file;

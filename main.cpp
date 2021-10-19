@@ -15,9 +15,9 @@ using namespace std;
 
 int sc_main(int argc, char *argv[])
 {
-   sc_signal<pkt_desc>  pkt_in0;
-   sc_signal<pkt_desc>  pkt_in1;
-   sc_signal<pkt_desc>  pkt_out0;
+   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in0;
+   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in1;
+   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_out0;
    sc_signal<int>       in_clk_cnt;
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
