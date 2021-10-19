@@ -62,7 +62,7 @@ void stim :: stim_prc()
                  << pkt_desc_tmp[i];
             pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
                  << pkt_desc_tmp[i];
-            out_pkt_stim.write(pkt_desc_tmp[i]);
+            out_pkt_stim[i].write(pkt_desc_tmp[i]);
         }
         ////print packet
         //cout << "........................" << endl;
