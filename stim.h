@@ -7,7 +7,7 @@
 #include "pkt.h"
 #include "comm_def.h" 
 #include <string>
-#include <iostream> 
+#include <iostream>
 
 
 struct stim: sc_module
