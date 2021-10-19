@@ -22,6 +22,7 @@ using namespace std;
 ////////////////////////////////////////////////////////
 const int g_m_freq  = 100; //100M HZ
 const int g_m_inter_num =6;
+const int NO_PORTS =4;
 
 struct pkt_desc
 {

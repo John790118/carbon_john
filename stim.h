@@ -5,11 +5,10 @@
 
 #include "systemc.h"
 #include "pkt.h"
-#include "comm_def.h"
+#include "comm_def.h" 
 #include <string>
-#include <iostream>
+#include <iostream> 
 
-const int NO_PORTS =4;
 
 struct stim: sc_module
 {
