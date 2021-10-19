@@ -22,7 +22,7 @@ void pkt_receiver :: pkt_receiver_prc()
 //        {
 //            pkt_receiver_file.open("pkt_receiver_file.log",ios::out | ios::app);
 //        }
-        for（int i=0; i < NO_PORTS; i++)
+        for(int i=0; i < NO_PORTS; i++)
         {
             temp_val[i] = pkt_in[i].read();
             cout << "@" << in_clk_cnt << "_clks stim receive =>:"
