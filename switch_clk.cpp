@@ -40,7 +40,7 @@
 
 void switch_clk::entry()
  {
-  static bool var_in_clk_cnt = 0;
+  static int var_in_clk_cnt = 0;
     {
        in_clk_cnt = var_in_clk_cnt++;
      }

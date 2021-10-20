@@ -2,22 +2,18 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include "pkt.h"
-#include "pkt_sender.h" 
 #include "stim.h"
-#define SEND_FILE_NUM 10
+#include "comm_def.h"
+//#define SEND_FILE_NUM 10
 
 void stim :: stim_prc()
 {
-    pkt pkt_data;
-
     int pkt_send_count;
     
     ofstream pkt_sender_file;
 //    pkt_sender_file.open("pkt_sender_file.log");
     pkt_sender_file.open(pkt_sender_filename);
 
-    pkt_data.pkt_id = 0;
     pkt_send_count = 0;
 
     srand((unsigned)time(NULL));
@@ -42,49 +38,13 @@ void stim :: stim_prc()
             pkt_desc_tmp[i].sop     = false;
             pkt_desc_tmp[i].eop     = false;
 
-            ////define DMAC SMAC PKT_TYPE
-            //pkt_desc_tmp[i].pkt_dst_mac    = 0xDC71967D0000 + rand()%255;
-            //pkt_data.pkt_src_mac    = 0xDC71967D0100 + rand()%255;
-            //pkt_data.pkt_type       = 0x0800;
-
-            ////define PKT_LEN, 64<=PKT_LEN<=1518
-            //pkt_data.pkt_len        = 18 + 46 + rand()%1500;
-
-            ////define PKT_ID
-            //pkt_data.pkt_id++;
-
-            //define PKT_INPRT and PKT_OUTPRT
-            //pkt_data.pkt_inprt  = pkt_inprt;
-            //pkt_data.pkt_outprt = -1;
-
             //output pkt_data
-            cout << "@" << in_clk_cnt << "_clks stim sent =>:"
-                 << pkt_desc_tmp[i];
-            pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
-                 << pkt_desc_tmp[i];
             out_pkt_stim[i].write(pkt_desc_tmp[i]);
+            cout << "@" << in_clk_cnt << "_clks stim sent =>:"
+                 << pkt_desc_tmp[i] << endl;
+//            pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
+//                 << pkt_desc_tmp[i];
         }
-        ////print packet
-        //cout << "........................" << endl;
-        //cout << "New Packet Send" << endl;
-        //cout << "Pakcet ID:     " << "Ox" << hex << pkt_data.pkt_id << endl;
-        //cout << "Pakcet inport: " << "Ox" << hex << pkt_data.pkt_inprt << endl;
-        //cout << "Pakcet outport:" << "Ox" << hex << pkt_data.pkt_outprt << endl;
-        //cout << "Packet Length: " << "Ox" << hex << pkt_data.pkt_len << endl;
-        //cout << "Packet DMAC:   " << "Ox" << hex << pkt_data.pkt_dst_mac << endl;
-        //cout << "Packet SMAC:   " << "Ox" << hex << pkt_data.pkt_src_mac << endl;
-        //cout << "Packet Type:   " << "Ox" << hex << pkt_data.pkt_type << endl;
-
-        //pkt_sender_file << "........................" << endl;
-        //pkt_sender_file << "New Packet Send" << endl;
-        //pkt_sender_file << "Pakcet ID:     " << "Ox" << hex << pkt_data.pkt_id << endl;
-        //pkt_sender_file << "Pakcet inport: " << "Ox" << hex << pkt_data.pkt_inprt << endl;
-        //pkt_sender_file << "Pakcet outport:" << "Ox" << hex << pkt_data.pkt_outprt << endl;
-        //pkt_sender_file << "Packet Length: " << "Ox" << hex << pkt_data.pkt_len << endl;
-        //pkt_sender_file << "Packet DMAC:   " << "Ox" << hex << pkt_data.pkt_dst_mac << endl;
-        //pkt_sender_file << "Packet SMAC:   " << "Ox" << hex << pkt_data.pkt_src_mac << endl;
-        //pkt_sender_file << "Packet Type:   " << "Ox" << hex << pkt_data.pkt_type << endl;
-
         wait();
 
         // wait for 1 to 3 clock periods

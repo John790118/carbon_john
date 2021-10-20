@@ -22,7 +22,8 @@ using namespace std;
 ////////////////////////////////////////////////////////
 const int g_m_freq  = 100; //100M HZ
 const int g_m_inter_num =6;
-const int NO_PORTS =4;
+const int NO_PORTS = 4;
+const int SEND_FILE_NUM = 10;
 
 struct pkt_desc
 {
@@ -66,15 +67,54 @@ struct pkt_desc
    } 
 }; 
 
-inline  ostream& operator << ( ostream& os, const pkt_desc& /* a */ )
+inline  ostream& operator << ( ostream& os, const pkt_desc&  a )
 {
-    os << "streaming of struct pkt not implemented";
+//    os << "streaming of struct pkt not implemented";
+    os << "@" << sc_time_stamp() << "["
+         << "typ:" << (a.type)
+         << ",fid:" << (a.fid)
+         << ",sid:" << (a.sid)
+         << ",did:" << (a.did)
+         << ",fsn:" << (a.fsn)
+         << ",len:" << (a.len)
+         << ",pri:" << (a.pri)
+         << ",spt:" << (a.sport)
+         << ",dpt:" << (a.dport)
+         << ",qid:" << (a.qid)
+         << ",vld:" << (a.vldl)
+         << ",csn:" << (a.csn)
+         << ",sop:" << (a.sop)
+         << ",eop:" << (a.eop)
+         << "]" << endl;
     return os;
 }
 
-inline void  sc_trace( sc_trace_file* tf, const pkt_desc& a, const std::string& name )
+//inline void  sc_trace( sc_trace_file* tf, const pkt_desc& a, const std::string& name )
+//{
+//    sc_trace( tf, a.sport, name + ".data" );
+//}
+
+inline void
+#if defined(SC_API_VERSION_STRING)
+    sc_trace( sc_trace_file* tf, const pkt_desc& a, const std::string& name )
+#else
+    sc_trace( sc_trace_file* tf, const pkt_desc& a, const sc_string& name )
+#endif
 {
-    sc_trace( tf, a.sport, name + ".data" );
+  sc_trace( tf, a.type,  name + ".type" );
+  sc_trace( tf, a.fid,   name + ".fid"  );
+  sc_trace( tf, a.sid,   name + ".sid"  );
+  sc_trace( tf, a.did,   name + ".did"  );
+  sc_trace( tf, a.fsn,   name + ".fsn"  );
+  sc_trace( tf, a.len,   name + ".len"  );
+  sc_trace( tf, a.pri,   name + ".pri"  );
+  sc_trace( tf, a.sport, name + ".sport");
+  sc_trace( tf, a.dport, name + ".dport");
+  sc_trace( tf, a.qid,   name + ".qid"  );
+  sc_trace( tf, a.vldl,  name + ".vldl" );
+  sc_trace( tf, a.csn,   name + ".csn"  );
+  sc_trace( tf, a.sop,   name + ".sop"  );
+  sc_trace( tf, a.eop,   name + ".eop"  );
 }
 
 // fid映射规则表内容

@@ -15,14 +15,14 @@ using namespace std;
 
 int sc_main(int argc, char *argv[])
 {
-   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in0;
+   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in;
 //   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_in1;
 //   std::array<sc_signal<pkt_desc>, NO_PORTS >   pkt_out0;
    sc_signal<int>       in_clk_cnt;
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
 //   char * pkt_sender_filename0 = (char*)pkt_sender_outfile_str.c_str();
-   char *pkt_sender_filename0 = (char*)"pkt_sender_outfile0.log";
+   char *pkt_sender_filename = (char*)"pkt_sender_outfile.log";
 //   char *pkt_sender_filename1 = (char*)"pkt_sender_outfile1.log";
 
    sc_clock clock1("CLOCK1", 10, SC_NS, 0.5, 0.0, SC_NS);
@@ -31,11 +31,12 @@ int sc_main(int argc, char *argv[])
    in_clk_cnt_inst.in_clk_cnt(in_clk_cnt);
    in_clk_cnt_inst.CLK(clock1);
 
-   stim stim0("STIM0");
-   stim0.in_clk_cnt(in_clk_cnt);
-   stim0.out_pkt_stim(pkt_in0);
-   stim0.pkt_inprt = 0;
-   stim0.pkt_sender_filename = pkt_sender_filename0;
+   stim stim("MOD_STIM");
+   stim.in_clk_cnt(in_clk_cnt);
+   for(int i=0; i<NO_PORTS; i++)
+      stim.out_pkt_stim[i](pkt_in[i]);
+   stim.pkt_inprt = 0;
+   stim.pkt_sender_filename = pkt_sender_filename;
 
    //stim stim1("STIM1");
    //stim1.in_clk_cnt(in_clk_cnt);
@@ -50,7 +51,8 @@ int sc_main(int argc, char *argv[])
    //pkt_switch_top.out0(pkt_out0);
 
    pkt_receiver pkt_receiver0("PKT_RECEIVER0");
-   pkt_receiver0.pkt_in(pkt_in0);
+   for(int i=0; i<NO_PORTS; i++)
+      pkt_receiver0.pkt_in[i](pkt_in[i]);
    pkt_receiver0.in_clk_cnt(in_clk_cnt);
 
    sc_start(0, SC_NS);
@@ -58,7 +60,10 @@ int sc_main(int argc, char *argv[])
    // create trace file
    sc_trace_file *tf = sc_create_vcd_trace_file("Packet");
    sc_trace(tf, clock1, "CLK1");
-   sc_trace(tf, pkt_in0, "PKT_IN0");
+   sc_trace(tf, pkt_in[0], "PKT_IN[0]");
+   sc_trace(tf, pkt_in[1], "PKT_IN[1]");
+   sc_trace(tf, pkt_in[2], "PKT_IN[2]");
+   sc_trace(tf, pkt_in[3], "PKT_IN[3]");
 //   sc_trace(tf, pkt_in1, "PKT_IN1");
 //   sc_trace(tf, pkt_out0, "PKT_OUT0");
 
