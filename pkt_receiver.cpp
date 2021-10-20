@@ -8,7 +8,7 @@
 
 void pkt_receiver :: pkt_receiver_prc()
 {
-    std::array<sc_out<pkt_desc>, NO_PORTS > temp_val; 
+    std::array<pkt_desc, NO_PORTS > temp_val; 
 //    ofstream pkt_receiver_file; 
 
     while(1)
@@ -28,8 +28,8 @@ void pkt_receiver :: pkt_receiver_prc()
             temp_val[i] = pkt_in[i].read();
             cout << "@" << in_clk_cnt << "_clks stim receive =>:"
                 << temp_val[i] << endl;
- //           pkt_receiver_file << "@" << in_clk_cnt << "_clks stim receive =>:"
- //               << temp_val[i];
+            pkt_receiver_file << "@" << in_clk_cnt << "_clks stim receive =>:"
+                << temp_val[i];
         }
 
         //cout << "               ........................" << endl;

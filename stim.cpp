@@ -42,8 +42,8 @@ void stim :: stim_prc()
             out_pkt_stim[i].write(pkt_desc_tmp[i]);
             cout << "@" << in_clk_cnt << "_clks stim sent =>:"
                  << pkt_desc_tmp[i] << endl;
-//            pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
-//                 << pkt_desc_tmp[i];
+            pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
+                 << pkt_desc_tmp[i];
         }
         wait();
 
