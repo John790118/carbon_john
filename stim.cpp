@@ -9,7 +9,15 @@
 void stim :: stim_prc()
 {
     int pkt_send_count;
-    
+
+    //vector<s_flow_rule>  g_flow_rule_tab;
+    s_flow_rule a;
+    a.did =9;
+    g_flow_rule_tab.push_back(a);
+    g_flow_rule_tab.push_back(a);
+    g_flow_rule_tab.push_back(a);
+    g_flow_rule_tab.push_back(a);
+ 
     ofstream pkt_sender_file;
 //    pkt_sender_file.open("pkt_sender_file.log");
     pkt_sender_file.open(pkt_sender_filename);
