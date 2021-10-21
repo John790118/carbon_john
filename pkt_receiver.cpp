@@ -8,7 +8,7 @@
 
 void pkt_receiver :: pkt_receiver_prc()
 {
-    std::array<pkt_desc, NO_PORTS > temp_val; 
+    std::array<s_pkt_desc, g_inter_num > temp_val; 
 //    ofstream pkt_receiver_file; 
 
     while(1)
@@ -23,7 +23,7 @@ void pkt_receiver :: pkt_receiver_prc()
 //        {
 //            pkt_receiver_file.open("pkt_receiver_file.log",ios::out | ios::app);
 //        }
-        for(int i=0; i < NO_PORTS; i++)
+        for(int i=0; i < g_inter_num; i++)
         {
             temp_val[i] = pkt_in[i].read();
             cout << "@" << in_clk_cnt << "_clks stim receive =>:"

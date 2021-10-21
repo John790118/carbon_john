@@ -13,16 +13,16 @@ struct stim: sc_module
 {
   //端口
   sc_in<int> in_clk_cnt;
-  std::array<sc_out<pkt_desc>, NO_PORTS > out_pkt_stim;  
-  int   pkt_inprt;
+  std::array<sc_out<s_pkt_desc>, g_inter_num > out_pkt_stim;  
+//  int   pkt_inprt;
   char* pkt_sender_filename;
 
   //信号
-  std::array<pkt_desc, NO_PORTS > pkt_desc_tmp;  
+  std::array<s_pkt_desc, g_inter_num > pkt_desc_tmp;  
 
   SC_CTOR(stim)
   {
-    for(int i=0; i < NO_PORTS; i++)
+    for(int i=0; i < g_inter_num; i++)
     {
       pkt_desc_tmp[i].type    = -1;
       pkt_desc_tmp[i].fid     = -1;

@@ -15,7 +15,7 @@ using namespace std;
 
 int sc_main(int argc, char *argv[])
 {
-   std::array<sc_signal<pkt_desc>, NO_PORTS >   sig_pkt_in;
+   std::array<sc_signal<s_pkt_desc>, g_inter_num >   sig_pkt_in;
    sc_signal<int>       in_clk_cnt;
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
@@ -31,14 +31,14 @@ int sc_main(int argc, char *argv[])
    stim * mod_stim;
    mod_stim = new stim("MOD_STIM");
    mod_stim->in_clk_cnt(in_clk_cnt);
-   for(int i=0; i<NO_PORTS; i++)
+   for(int i=0; i<g_inter_num; i++)
       mod_stim->out_pkt_stim[i](sig_pkt_in[i]);
-   mod_stim->pkt_inprt = 0;
+//   mod_stim->pkt_inprt = 0;
    mod_stim->pkt_sender_filename = pkt_sender_filename;
 
    pkt_receiver * pkt_receiver0;
    pkt_receiver0= new pkt_receiver("PKT_RECEIVER0");
-   for(int i=0; i<NO_PORTS; i++)
+   for(int i=0; i<g_inter_num; i++)
       pkt_receiver0->pkt_in[i](sig_pkt_in[i]);
    pkt_receiver0->in_clk_cnt(in_clk_cnt);
 
@@ -47,7 +47,7 @@ int sc_main(int argc, char *argv[])
    // create trace file
    sc_trace_file *tf = sc_create_vcd_trace_file("Packet");
    sc_trace(tf, clock1, "CLK1");
-   sc_trace(tf, sig_pkt_in[0], "PKT_IN[1]");
+   sc_trace(tf, sig_pkt_in[0], "PKT_IN[0]");
 //   sc_trace(tf, sig_pkt_in[1], "PKT_IN[1]");
 //   sc_trace(tf, sig_pkt_in[2], "PKT_IN[2]");
 //   sc_trace(tf, sig_pkt_in[3], "PKT_IN[3]");

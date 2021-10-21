@@ -4,7 +4,7 @@
 #include <time.h>
 #include "stim.h"
 #include "comm_def.h"
-//#define SEND_FILE_NUM 10
+#define SEND_FILE_NUM 10
 
 void stim :: stim_prc()
 {
@@ -21,16 +21,31 @@ void stim :: stim_prc()
 //    while(1)
     while(pkt_send_count++ < SEND_FILE_NUM)
     {
-        for(int i=0; i < NO_PORTS; i++)
+        for(int i=0; i < g_inter_num; i++)
         {
+//            pkt_desc_tmp[i].type    = 0;
+//            pkt_desc_tmp[i].fid     = -1;
+//            pkt_desc_tmp[i].sid     = i;
+//            pkt_desc_tmp[i].did     = g_inter_num-1-i;
+//            pkt_desc_tmp[i].fsn     = pkt_send_count;
+//            pkt_desc_tmp[i].len     = 64;
+//            pkt_desc_tmp[i].pri     = 0;
+//            pkt_desc_tmp[i].sport   = pkt_inprt;
+//            pkt_desc_tmp[i].dport   = -1;
+//            pkt_desc_tmp[i].qid     = -1;
+//            pkt_desc_tmp[i].vldl    = -1;
+//            pkt_desc_tmp[i].csn     = -1;
+//            pkt_desc_tmp[i].sop     = false;
+//            pkt_desc_tmp[i].eop     = false;
+
             pkt_desc_tmp[i].type    = 0;
             pkt_desc_tmp[i].fid     = -1;
-            pkt_desc_tmp[i].sid     = i;
-            pkt_desc_tmp[i].did     = NO_PORTS-1-i;
+            pkt_desc_tmp[i].sid     = g_flow_rule_tab[i].sid;
+            pkt_desc_tmp[i].did     = g_flow_rule_tab[i].did;
             pkt_desc_tmp[i].fsn     = pkt_send_count;
-            pkt_desc_tmp[i].len     = 64;
-            pkt_desc_tmp[i].pri     = 0;
-            pkt_desc_tmp[i].sport   = pkt_inprt;
+            pkt_desc_tmp[i].len     = g_flow_rule_tab[i].len;
+            pkt_desc_tmp[i].pri     = g_flow_rule_tab[i].pri;
+            pkt_desc_tmp[i].sport   = g_flow_rule_tab[i].sport;
             pkt_desc_tmp[i].dport   = -1;
             pkt_desc_tmp[i].qid     = -1;
             pkt_desc_tmp[i].vldl    = -1;
