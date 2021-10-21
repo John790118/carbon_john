@@ -4,19 +4,30 @@
 #include <time.h>
 #include "stim.h"
 #include "comm_def.h"
-#define SEND_FILE_NUM 10
+#define SEND_FILE_CYCLE 4
+#define FLOW_RULE_TAB_SIZE 16
 
 void stim :: stim_prc()
 {
     int pkt_send_count;
+    int send_pkt_port;
 
     //vector<s_flow_rule>  g_flow_rule_tab;
     s_flow_rule a;
-    a.did =9;
-    g_flow_rule_tab.push_back(a);
-    g_flow_rule_tab.push_back(a);
-    g_flow_rule_tab.push_back(a);
-    g_flow_rule_tab.push_back(a);
+    for(int fid=0; fid<FLOW_RULE_TAB_SIZE; fid++)
+    {
+        a.sid       = fid*4;
+        a.did       = 0;
+        a.len       = 64;
+        a.pri       = 0;
+        a.sport     = fid % g_inter_num;
+        a.dport     = 0;
+        a.qid       = 0;
+        a.len2add   = 1;
+        a.flow_speed= 13;
+
+        g_flow_rule_tab.push_back(a);
+    }
  
     ofstream pkt_sender_file;
 //    pkt_sender_file.open("pkt_sender_file.log");
@@ -27,31 +38,33 @@ void stim :: stim_prc()
     srand((unsigned)time(NULL));
     wait(8);
 //    while(1)
-    while(pkt_send_count++ < SEND_FILE_NUM)
+    while(pkt_send_count++ < SEND_FILE_CYCLE)
     {
-        for(int i=0; i < g_inter_num; i++)
+        for(int fid=0; fid < FLOW_RULE_TAB_SIZE; fid++)
         {
-            pkt_desc_tmp[i].type    = 0;
-            pkt_desc_tmp[i].fid     = -1;
-            pkt_desc_tmp[i].sid     = g_flow_rule_tab[i].sid;
-            pkt_desc_tmp[i].did     = g_flow_rule_tab[i].did;
-            pkt_desc_tmp[i].fsn     = pkt_send_count;
-            pkt_desc_tmp[i].len     = g_flow_rule_tab[i].len;
-            pkt_desc_tmp[i].pri     = g_flow_rule_tab[i].pri;
-            pkt_desc_tmp[i].sport   = g_flow_rule_tab[i].sport;
-            pkt_desc_tmp[i].dport   = -1;
-            pkt_desc_tmp[i].qid     = -1;
-            pkt_desc_tmp[i].vldl    = -1;
-            pkt_desc_tmp[i].csn     = -1;
-            pkt_desc_tmp[i].sop     = false;
-            pkt_desc_tmp[i].eop     = false;
+            send_pkt_port = g_flow_rule_tab[fid].sport;
+
+            pkt_desc_tmp[send_pkt_port].type = 0;
+            pkt_desc_tmp[send_pkt_port].fid  = -1;
+            pkt_desc_tmp[send_pkt_port].sid  = g_flow_rule_tab[fid].sid;
+            pkt_desc_tmp[send_pkt_port].did  = g_flow_rule_tab[fid].did;
+            pkt_desc_tmp[send_pkt_port].fsn  = pkt_send_count;
+            pkt_desc_tmp[send_pkt_port].len  = g_flow_rule_tab[fid].len;
+            pkt_desc_tmp[send_pkt_port].pri  = g_flow_rule_tab[fid].pri;
+            pkt_desc_tmp[send_pkt_port].sport= g_flow_rule_tab[fid].sport;
+            pkt_desc_tmp[send_pkt_port].dport= -1;
+            pkt_desc_tmp[send_pkt_port].qid  = -1;
+            pkt_desc_tmp[send_pkt_port].vldl = -1;
+            pkt_desc_tmp[send_pkt_port].csn  = -1;
+            pkt_desc_tmp[send_pkt_port].sop  = false;
+            pkt_desc_tmp[send_pkt_port].eop  = false;
 
             //output pkt_data
-            out_pkt_stim[i].write(pkt_desc_tmp[i]);
+            out_pkt_stim[send_pkt_port].write(pkt_desc_tmp[send_pkt_port]);
             cout << "@" << in_clk_cnt << "_clks stim sent =>:"
-                 << pkt_desc_tmp[i] << endl;
+                 << pkt_desc_tmp[send_pkt_port] << endl;
             pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
-                 << pkt_desc_tmp[i];
+                 << pkt_desc_tmp[send_pkt_port];
         }
         wait();
 

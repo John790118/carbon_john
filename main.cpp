@@ -10,7 +10,7 @@
 #include "switch_clk.h"
 #include "stim.h"
 #include "comm_def.h"
-//using namespace std;
+using namespace std;
 
 
 int sc_main(int argc, char *argv[])
@@ -52,7 +52,7 @@ int sc_main(int argc, char *argv[])
 //   sc_trace(tf, sig_pkt_in[2], "PKT_IN[2]");
 //   sc_trace(tf, sig_pkt_in[3], "PKT_IN[3]");
 
-   sc_start(0.001,SC_MS);
+   sc_start(0.01,SC_MS);
 
    // close trace file
    sc_close_vcd_trace_file(tf);

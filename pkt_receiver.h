@@ -6,6 +6,8 @@
 #include "systemc.h"
 #include "comm_def.h"
 
+#define FLOW_RULE_TAB_SIZE 16
+
 struct pkt_receiver: sc_module
 {
   std::array<sc_in<s_pkt_desc>, g_inter_num >  pkt_in;
@@ -17,7 +19,11 @@ struct pkt_receiver: sc_module
 		pkt_receiver_file.open("pkt_receiver_file.log");
     SC_THREAD(pkt_receiver_prc);
     dont_initialize();
-    sensitive << pkt_in[0] << pkt_in[1] << pkt_in[2] << pkt_in[3];
+    for(int i=0;i<g_inter_num;i++)
+    {
+      sensitive << pkt_in[i];
+    }
+//    sensitive << pkt_in[0] << pkt_in[1] << pkt_in[2] << pkt_in[3];
 
     first = 1;
   }
