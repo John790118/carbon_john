@@ -68,10 +68,12 @@ void stim :: stim_prc()
 
     srand((unsigned)time(NULL));
     wait(8);
-//    while(1)
-    while(pkt_send_count < SEND_FILE_CYCLE)
+    while(1)
+//    while(pkt_send_count < SEND_FILE_CYCLE)
     {
-        if (token == 4)
+        token++;
+
+        if ((pkt_send_count < SEND_FILE_CYCLE) && (token == 4))
         {
             for(int fid=0; fid < FLOW_RULE_TAB_SIZE; fid++)
             {
@@ -118,7 +120,6 @@ void stim :: stim_prc()
             }
         }
 
-        token++;
 
         wait();
 

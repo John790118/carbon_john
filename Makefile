@@ -11,7 +11,7 @@ LDLIBS   += $(shell pkg-config --libs-only-l     systemc)
 
 SOURCES = 	main.cpp \
 			comm_def.cpp \
-			pkt_receiver.cpp \
+			stat.cpp \
 			stim.cpp \
 			switch_clk.cpp
 			

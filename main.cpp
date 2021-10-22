@@ -9,6 +9,7 @@
 #include "pkt_sch.h"
 #include "switch_clk.h"
 #include "stim.h"
+#include "stat.h"
 #include "comm_def.h"
 using namespace std;
 
@@ -36,11 +37,11 @@ int sc_main(int argc, char *argv[])
 //   mod_stim->pkt_inprt = 0;
    mod_stim->pkt_sender_filename = pkt_sender_filename;
 
-   pkt_receiver * pkt_receiver0;
-   pkt_receiver0= new pkt_receiver("PKT_RECEIVER0");
+   stat * mod_stat;
+   mod_stat= new stat("MODE_STAT");
    for(int i=0; i<g_inter_num; i++)
-      pkt_receiver0->pkt_in[i](sig_pkt_in[i]);
-   pkt_receiver0->in_clk_cnt(in_clk_cnt);
+      mod_stat->pkt_in[i](sig_pkt_in[i]);
+   mod_stat->in_clk_cnt(in_clk_cnt);
 
    sc_start(0, SC_NS);
 
@@ -52,7 +53,7 @@ int sc_main(int argc, char *argv[])
 //   sc_trace(tf, sig_pkt_in[2], "PKT_IN2");
 //   sc_trace(tf, sig_pkt_in[3], "PKT_IN3");
 
-   sc_start(0.01,SC_MS);
+   sc_start(0.001,SC_MS);
 
    // close trace file
    sc_close_vcd_trace_file(tf);
