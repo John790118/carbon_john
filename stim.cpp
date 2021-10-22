@@ -4,13 +4,42 @@
 #include <time.h>
 #include "stim.h"
 #include "comm_def.h"
-#define SEND_FILE_CYCLE 4
-#define FLOW_RULE_TAB_SIZE 16
+
+void port_fifo::pkt_in(const s_pkt_desc& data_pkt)
+{
+
+    regs[pntr++] = data_pkt;
+    empty = false;
+    if (pntr == FLOW_RULE_TAB_SIZE)
+        full = true;      
+}
+
+s_pkt_desc port_fifo::pkt_out()
+{
+
+    s_pkt_desc temp;
+    temp = regs[0];
+    if (--pntr == 0) 
+        empty = true;
+    else
+        for(int i=0; i<FLOW_RULE_TAB_SIZE; i++)
+            regs[i] = regs[i+1];
+  return(temp);  
+}
 
 void stim :: stim_prc()
 {
     int pkt_send_count;
     int send_pkt_port;
+    int drop_count;
+    array<port_fifo,g_inter_num> port_fifo_inst;
+
+    for(int i=0; i<g_inter_num; i++)
+    {
+        port_fifo_inst[i].pntr = 0;
+        port_fifo_inst[i].full = false;
+        port_fifo_inst[i].empty = true;
+    }
 
     //vector<s_flow_rule>  g_flow_rule_tab;
     s_flow_rule a;
@@ -44,28 +73,44 @@ void stim :: stim_prc()
         {
             send_pkt_port = g_flow_rule_tab[fid].sport;
 
-            pkt_desc_tmp[send_pkt_port].type = 0;
-            pkt_desc_tmp[send_pkt_port].fid  = -1;
-            pkt_desc_tmp[send_pkt_port].sid  = g_flow_rule_tab[fid].sid;
-            pkt_desc_tmp[send_pkt_port].did  = g_flow_rule_tab[fid].did;
-            pkt_desc_tmp[send_pkt_port].fsn  = pkt_send_count;
-            pkt_desc_tmp[send_pkt_port].len  = g_flow_rule_tab[fid].len;
-            pkt_desc_tmp[send_pkt_port].pri  = g_flow_rule_tab[fid].pri;
-            pkt_desc_tmp[send_pkt_port].sport= g_flow_rule_tab[fid].sport;
-            pkt_desc_tmp[send_pkt_port].dport= -1;
-            pkt_desc_tmp[send_pkt_port].qid  = -1;
-            pkt_desc_tmp[send_pkt_port].vldl = -1;
-            pkt_desc_tmp[send_pkt_port].csn  = -1;
-            pkt_desc_tmp[send_pkt_port].sop  = false;
-            pkt_desc_tmp[send_pkt_port].eop  = false;
+            pkt_desc_tmp.type = 0;
+            pkt_desc_tmp.fid  = -1;
+            pkt_desc_tmp.sid  = g_flow_rule_tab[fid].sid;
+            pkt_desc_tmp.did  = g_flow_rule_tab[fid].did;
+            pkt_desc_tmp.fsn  = pkt_send_count;
+            pkt_desc_tmp.len  = g_flow_rule_tab[fid].len;
+            pkt_desc_tmp.pri  = g_flow_rule_tab[fid].pri;
+            pkt_desc_tmp.sport= g_flow_rule_tab[fid].sport;
+            pkt_desc_tmp.dport= -1;
+            pkt_desc_tmp.qid  = -1;
+            pkt_desc_tmp.vldl = -1;
+            pkt_desc_tmp.csn  = -1;
+            pkt_desc_tmp.sop  = false;
+            pkt_desc_tmp.eop  = false;
 
-            //output pkt_data
-            out_pkt_stim[send_pkt_port].write(pkt_desc_tmp[send_pkt_port]);
-            cout << "@" << in_clk_cnt << "_clks stim sent =>:"
-                 << pkt_desc_tmp[send_pkt_port] << endl;
-            pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
-                 << pkt_desc_tmp[send_pkt_port];
+            if(port_fifo_inst[send_pkt_port].full == true) 
+            {
+                drop_count++;
+                cout << "****Dropped packets: " << dec << drop_count << endl;
+            }
+            else
+                port_fifo_inst[send_pkt_port].pkt_in(pkt_desc_tmp);
         }
+
+        for(int send_port=0; send_port<g_inter_num; send_port++)
+        {
+            //output pkt_data
+            if(port_fifo_inst[send_port].empty == false)
+            {
+                pkt_desc_tmp = port_fifo_inst[send_port].pkt_out()
+                out_pkt_stim[send_port].write(pkt_desc_tmp);
+                cout << "@" << in_clk_cnt << "_clks stim sent =>:"
+                    << pkt_desc_tmp << endl;
+                pkt_sender_file << "@" << in_clk_cnt << "_clks stim sent =>:"
+                    << pkt_desc_tmp;
+            }
+        }
+
         wait();
 
         // wait for 1 to 3 clock periods

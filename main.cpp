@@ -47,10 +47,10 @@ int sc_main(int argc, char *argv[])
    // create trace file
    sc_trace_file *tf = sc_create_vcd_trace_file("Packet");
    sc_trace(tf, clock1, "CLK1");
-   sc_trace(tf, sig_pkt_in[0], "PKT_IN[0]");
-//   sc_trace(tf, sig_pkt_in[1], "PKT_IN[1]");
-//   sc_trace(tf, sig_pkt_in[2], "PKT_IN[2]");
-//   sc_trace(tf, sig_pkt_in[3], "PKT_IN[3]");
+   sc_trace(tf, sig_pkt_in[0], "PKT_IN0");
+//   sc_trace(tf, sig_pkt_in[1], "PKT_IN0");
+//   sc_trace(tf, sig_pkt_in[2], "PKT_IN2");
+//   sc_trace(tf, sig_pkt_in[3], "PKT_IN3");
 
    sc_start(0.01,SC_MS);
 
