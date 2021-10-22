@@ -32,6 +32,7 @@ void stim :: stim_prc()
     int pkt_send_count;
     int send_pkt_port;
     int drop_count;
+    int token;
     array<port_fifo,g_inter_num> port_fifo_inst;
 
     for(int i=0; i<g_inter_num; i++)
@@ -63,38 +64,44 @@ void stim :: stim_prc()
     pkt_sender_file.open(pkt_sender_filename);
 
     pkt_send_count = 0;
+    token = 0;
 
     srand((unsigned)time(NULL));
     wait(8);
 //    while(1)
-    while(pkt_send_count++ < SEND_FILE_CYCLE)
+    while(pkt_send_count < SEND_FILE_CYCLE)
     {
-        for(int fid=0; fid < FLOW_RULE_TAB_SIZE; fid++)
+        if (token == 4)
         {
-            send_pkt_port = g_flow_rule_tab[fid].sport;
-
-            pkt_desc_tmp.type = 0;
-            pkt_desc_tmp.fid  = -1;
-            pkt_desc_tmp.sid  = g_flow_rule_tab[fid].sid;
-            pkt_desc_tmp.did  = g_flow_rule_tab[fid].did;
-            pkt_desc_tmp.fsn  = pkt_send_count;
-            pkt_desc_tmp.len  = g_flow_rule_tab[fid].len;
-            pkt_desc_tmp.pri  = g_flow_rule_tab[fid].pri;
-            pkt_desc_tmp.sport= g_flow_rule_tab[fid].sport;
-            pkt_desc_tmp.dport= -1;
-            pkt_desc_tmp.qid  = -1;
-            pkt_desc_tmp.vldl = -1;
-            pkt_desc_tmp.csn  = -1;
-            pkt_desc_tmp.sop  = false;
-            pkt_desc_tmp.eop  = false;
-
-            if(port_fifo_inst[send_pkt_port].full == true) 
+            for(int fid=0; fid < FLOW_RULE_TAB_SIZE; fid++)
             {
-                drop_count++;
-                cout << "****Dropped packets: " << dec << drop_count << endl;
+                send_pkt_port = g_flow_rule_tab[fid].sport;
+
+                pkt_desc_tmp.type = 0;
+                pkt_desc_tmp.fid  = -1;
+                pkt_desc_tmp.sid  = g_flow_rule_tab[fid].sid;
+                pkt_desc_tmp.did  = g_flow_rule_tab[fid].did;
+                pkt_desc_tmp.fsn  = pkt_send_count;
+                pkt_desc_tmp.len  = g_flow_rule_tab[fid].len;
+                pkt_desc_tmp.pri  = g_flow_rule_tab[fid].pri;
+                pkt_desc_tmp.sport= g_flow_rule_tab[fid].sport;
+                pkt_desc_tmp.dport= -1;
+                pkt_desc_tmp.qid  = -1;
+                pkt_desc_tmp.vldl = -1;
+                pkt_desc_tmp.csn  = -1;
+                pkt_desc_tmp.sop  = false;
+                pkt_desc_tmp.eop  = false;
+
+                if(port_fifo_inst[send_pkt_port].full == true) 
+                {
+                    drop_count++;
+                    cout << "****Dropped packets: " << dec << drop_count << endl;
+                }
+                else
+                    port_fifo_inst[send_pkt_port].pkt_in(pkt_desc_tmp);
             }
-            else
-                port_fifo_inst[send_pkt_port].pkt_in(pkt_desc_tmp);
+        pkt_send_count++;
+        token = 0;
         }
 
         for(int send_port=0; send_port<g_inter_num; send_port++)
@@ -102,7 +109,7 @@ void stim :: stim_prc()
             //output pkt_data
             if(port_fifo_inst[send_port].empty == false)
             {
-                pkt_desc_tmp = port_fifo_inst[send_port].pkt_out()
+                pkt_desc_tmp = port_fifo_inst[send_port].pkt_out();
                 out_pkt_stim[send_port].write(pkt_desc_tmp);
                 cout << "@" << in_clk_cnt << "_clks stim sent =>:"
                     << pkt_desc_tmp << endl;
@@ -110,6 +117,8 @@ void stim :: stim_prc()
                     << pkt_desc_tmp;
             }
         }
+
+        token++;
 
         wait();
 

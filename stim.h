@@ -29,22 +29,22 @@ struct stim: sc_module
 
   SC_CTOR(stim)
   {
-      pkt_desc_tmp.type    = -1;
-      pkt_desc_tmp.fid     = -1;
-      pkt_desc_tmp.sid     = -1;
-      pkt_desc_tmp.did     = -1;
-      pkt_desc_tmp.fsn     = -1;
-      pkt_desc_tmp.len     = -1;
-      pkt_desc_tmp.pri     = -1;
-      pkt_desc_tmp.sport   = -1;
-      pkt_desc_tmp.dport   = -1;
-      pkt_desc_tmp.qid     = -1;
-      pkt_desc_tmp.vldl    = -1;
-      pkt_desc_tmp.csn     = -1;
-      pkt_desc_tmp.sop     = false;
-      pkt_desc_tmp.eop     = false;
+    pkt_desc_tmp.type    = -1;
+    pkt_desc_tmp.fid     = -1;
+    pkt_desc_tmp.sid     = -1;
+    pkt_desc_tmp.did     = -1;
+    pkt_desc_tmp.fsn     = -1;
+    pkt_desc_tmp.len     = -1;
+    pkt_desc_tmp.pri     = -1;
+    pkt_desc_tmp.sport   = -1;
+    pkt_desc_tmp.dport   = -1;
+    pkt_desc_tmp.qid     = -1;
+    pkt_desc_tmp.vldl    = -1;
+    pkt_desc_tmp.csn     = -1;
+    pkt_desc_tmp.sop     = false;
+    pkt_desc_tmp.eop     = false;
 
-    SC_THREAD(stimc);
+    SC_THREAD(stim_prc);
     sensitive << in_clk_cnt;
   }
   void stim_prc();
