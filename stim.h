@@ -7,7 +7,7 @@
 #include "comm_def.h" 
 #include <string>
 #include <iostream>
-#define SEND_FILE_CYCLE 4
+#define SEND_FILE_NUM 32
 #define FLOW_RULE_TAB_SIZE 16
 
 struct stim: sc_module
@@ -68,6 +68,24 @@ struct port_fifo
   void pkt_in(const s_pkt_desc& data_pkt);
 
   s_pkt_desc pkt_out();
+
+  s_pkt_desc pkt_pre_val();
+};
+
+struct token_bucket
+{
+  int token;
+
+  token_bucket()
+  {
+    token = 0;
+  }
+
+  void add_token(const int& add_token_val);
+
+  void sub_token(const int& sub_token_val);
+
+  int read_token();
 };
 
 #endif // _STIM_H_

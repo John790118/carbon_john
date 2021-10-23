@@ -7,7 +7,6 @@
 
 void port_fifo::pkt_in(const s_pkt_desc& data_pkt)
 {
-
     regs[pntr++] = data_pkt;
     empty = false;
     if (pntr == FLOW_RULE_TAB_SIZE)
@@ -16,7 +15,6 @@ void port_fifo::pkt_in(const s_pkt_desc& data_pkt)
 
 s_pkt_desc port_fifo::pkt_out()
 {
-
     s_pkt_desc temp;
     temp = regs[0];
     if (--pntr == 0) 
@@ -27,19 +25,55 @@ s_pkt_desc port_fifo::pkt_out()
   return(temp);  
 }
 
+s_pkt_desc port_fifo::pkt_pre_val()
+{
+    s_pkt_desc temp;
+    temp = regs[0];
+  return(temp);  
+}
+
+void token_bucket::add_token(const int& add_token_val)
+{
+    token = token + add_token_val;
+}
+
+void token_bucket::sub_token(const int& sub_token_val)
+{
+    token = token - sub_token_val;
+}
+
+int token_bucket::read_token()
+{
+    int temp;
+    temp = token;
+    return(temp);
+}
+
 void stim :: stim_prc()
 {
     int pkt_send_count;
     int send_pkt_port;
     int drop_count;
-    int token;
+    int token_count;
     array<port_fifo,g_inter_num> port_fifo_inst;
+    array<token_bucket,g_inter_num> port_token_bucket;
+    array<token_bucket,FLOW_RULE_TAB_SIZE> flow_token_bucket;
 
     for(int i=0; i<g_inter_num; i++)
     {
         port_fifo_inst[i].pntr = 0;
         port_fifo_inst[i].full = false;
         port_fifo_inst[i].empty = true;
+    }
+
+    for(int i=0; i<g_inter_num; i++)
+    {
+        port_token_bucket[i].token = 0;
+    }
+
+    for(int i=0; i<FLOW_RULE_TAB_SIZE; i++)
+    {
+        flow_token_bucket[i].token = 0;
     }
 
     //vector<s_flow_rule>  g_flow_rule_tab;
@@ -54,7 +88,7 @@ void stim :: stim_prc()
         a.dport     = 0;
         a.qid       = 0;
         a.len2add   = 1;
-        a.flow_speed= 13;
+        a.flow_speed= 30;
 
         g_flow_rule_tab.push_back(a);
     }
@@ -64,16 +98,34 @@ void stim :: stim_prc()
     pkt_sender_file.open(pkt_sender_filename);
 
     pkt_send_count = 0;
-    token = 0;
+    token_count = 0;
 
     srand((unsigned)time(NULL));
     wait(8);
     while(1)
 //    while(pkt_send_count < SEND_FILE_CYCLE)
     {
-        token++;
+        if(token_count < (g_freq/50))
+        {
+            token_count++;
+        }
+        else
+        {
+            token_count = 0;
+            // add token to port token bucket
+            for(int i=0; i<g_inter_num; i++)
+            {
+                port_token_bucket[i].add_token(125);   // 1000Mbps=125MBPS
+            }
+            // add token to flow token bucket
+            for(int i=0; i<FLOW_RULE_TAB_SIZE; i++)
+            {
+                flow_token_bucket[i].add_token(g_flow_rule_tab[i].flow_speed);
+            }
+        }
 
-        if ((pkt_send_count < SEND_FILE_CYCLE) && (token == 4))
+        // generate desc packet per flow
+        if (pkt_send_count < SEND_FILE_NUM)
         {
             for(int fid=0; fid < FLOW_RULE_TAB_SIZE; fid++)
             {
@@ -94,22 +146,28 @@ void stim :: stim_prc()
                 pkt_desc_tmp.sop  = false;
                 pkt_desc_tmp.eop  = false;
 
-                if(port_fifo_inst[send_pkt_port].full == true) 
+                if(flow_token_bucket[fid].read_token() >= pkt_desc_tmp.len)
                 {
-                    drop_count++;
-                    cout << "****Dropped packets: " << dec << drop_count << endl;
+                    flow_token_bucket[fid].sub_token(pkt_desc_tmp.len);
+                    if(port_fifo_inst[send_pkt_port].full == true) 
+                    {
+                        drop_count++;
+                        cout << "****Dropped packets: " << dec << drop_count << endl;
+                    }
+                    else
+                        port_fifo_inst[send_pkt_port].pkt_in(pkt_desc_tmp);
+                pkt_send_count++;
                 }
-                else
-                    port_fifo_inst[send_pkt_port].pkt_in(pkt_desc_tmp);
             }
-        pkt_send_count++;
-        token = 0;
         }
 
+        // output desc packet to each port
         for(int send_port=0; send_port<g_inter_num; send_port++)
         {
             //output pkt_data
-            if(port_fifo_inst[send_port].empty == false)
+            pkt_desc_tmp = port_fifo_inst[send_port].pkt_pre_val();
+            if((port_fifo_inst[send_port].empty == false)
+                && (port_token_bucket[send_port].read_token() >= pkt_desc_tmp.len))
             {
                 pkt_desc_tmp = port_fifo_inst[send_port].pkt_out();
                 out_pkt_stim[send_port].write(pkt_desc_tmp);

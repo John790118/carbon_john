@@ -23,7 +23,7 @@ int sc_main(int argc, char *argv[])
 //   char * pkt_sender_filename0 = (char*)pkt_sender_outfile_str.c_str();
    char *pkt_sender_filename = (char*)"pkt_sender_file.log";
 
-   sc_clock clock1("CLOCK1", 10, SC_NS, 0.5, 0.0, SC_NS);
+   sc_clock clock1("CLOCK1", (1000/g_freq), SC_NS, 0.5, 0.0, SC_NS);
 
    switch_clk in_clk_cnt_inst("CLK_CNT_INST");
    in_clk_cnt_inst.in_clk_cnt(in_clk_cnt);
