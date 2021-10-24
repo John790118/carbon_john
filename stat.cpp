@@ -8,7 +8,7 @@
 
 void stat :: stat_prc()
 {
-    std::array<s_pkt_desc, g_inter_num > temp_val; 
+    std::array<s_pkt_desc, G_INTER_NUM > temp_val; 
 //    ofstream pkt_receiver_file; 
 
     while(1)
@@ -23,7 +23,7 @@ void stat :: stat_prc()
 //        {
 //            pkt_receiver_file.open("pkt_receiver_file.log",ios::out | ios::app);
 //        }
-        for(int i=0; i < g_inter_num; i++)
+        for(int i=0; i < G_INTER_NUM; i++)
         {
             if(pkt_in[i].event())
             {

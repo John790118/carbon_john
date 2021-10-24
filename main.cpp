@@ -4,9 +4,6 @@
 #include <iostream>
 #include "systemc.h"
 //#include <memory>
-#include "pkt_receiver.h"
-#include "pkt_switch.h"
-#include "pkt_sch.h"
 #include "switch_clk.h"
 #include "stim.h"
 #include "stat.h"
@@ -16,7 +13,7 @@ using namespace std;
 
 int sc_main(int argc, char *argv[])
 {
-   std::array<sc_signal<s_pkt_desc>, g_inter_num >   sig_pkt_in;
+   std::array<sc_signal<s_pkt_desc>, G_INTER_NUM >   sig_pkt_in;
    sc_signal<int>       in_clk_cnt;
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
@@ -32,14 +29,14 @@ int sc_main(int argc, char *argv[])
    stim * mod_stim;
    mod_stim = new stim("MOD_STIM");
    mod_stim->in_clk_cnt(in_clk_cnt);
-   for(int i=0; i<g_inter_num; i++)
+   for(int i=0; i<G_INTER_NUM; i++)
       mod_stim->out_pkt_stim[i](sig_pkt_in[i]);
 //   mod_stim->pkt_inprt = 0;
    mod_stim->pkt_sender_filename = pkt_sender_filename;
 
    stat * mod_stat;
    mod_stat= new stat("MODE_STAT");
-   for(int i=0; i<g_inter_num; i++)
+   for(int i=0; i<G_INTER_NUM; i++)
       mod_stat->pkt_in[i](sig_pkt_in[i]);
    mod_stat->in_clk_cnt(in_clk_cnt);
 

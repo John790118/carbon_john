@@ -10,7 +10,7 @@
 
 struct stat: sc_module
 {
-  std::array<sc_in<s_pkt_desc>, g_inter_num >  pkt_in;
+  std::array<sc_in<s_pkt_desc>, G_INTER_NUM >  pkt_in;
   sc_in<int> in_clk_cnt;
   int first;
   ofstream pkt_receiver_file;
@@ -19,11 +19,10 @@ struct stat: sc_module
 		pkt_receiver_file.open("pkt_receiver_file.log");
     SC_THREAD(stat_prc);
     dont_initialize();
-    for(int i=0;i<g_inter_num;i++)
+    for(int i=0;i<G_INTER_NUM;i++)
     {
       sensitive << pkt_in[i];
     }
-//    sensitive << pkt_in[0] << pkt_in[1] << pkt_in[2] << pkt_in[3];
 
     first = 1;
   }

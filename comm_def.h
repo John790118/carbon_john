@@ -20,8 +20,10 @@ using namespace std;
 // Date: 2021.10.14 第一版
 // Hierarchy : 编号，索引公共库
 ////////////////////////////////////////////////////////
-const int g_freq  = 100; //100M HZ
-const int g_inter_num =4;
+const int G_FREQ = 100; //100M HZ
+const int G_INTER_NUM = 4;
+const int G_QUE_NUM = 16;
+
 
 struct s_pkt_desc
 {
