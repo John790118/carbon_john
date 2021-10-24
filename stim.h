@@ -14,19 +14,19 @@ struct stim: sc_module
 {
   //端口
   sc_in<int> in_clk_cnt;
-  std::array<sc_out<s_pkt_desc>, g_inter_num> out_pkt_stim;  
+  std::array<sc_out<s_pkt_desc>, G_INTER_NUM> out_pkt_stim;  
 //  int   pkt_inprt;
   char* pkt_sender_filename;
 
   //信号
-//  std::array<s_pkt_desc, g_inter_num> pkt_desc_tmp;  
+//  std::array<s_pkt_desc, G_INTER_NUM> pkt_desc_tmp;  
   s_pkt_desc pkt_desc_tmp;  
   s_flow_rule a;
 
-  //std::array<array<s_pkt_desc, FLOW_RULE_TAB_SIZE>,g_inter_num> fifo_regs;
-  //std::array<bool,g_inter_num> fifo_full;
-  //std::array<bool,g_inter_num> fifo_empty;
-  //std::array<int,g_inter_num>  fifo_pntr;
+  //std::array<array<s_pkt_desc, FLOW_RULE_TAB_SIZE>,G_INTER_NUM> fifo_regs;
+  //std::array<bool,G_INTER_NUM> fifo_full;
+  //std::array<bool,G_INTER_NUM> fifo_empty;
+  //std::array<int,G_INTER_NUM>  fifo_pntr;
 
   SC_CTOR(stim)
   {
@@ -52,7 +52,7 @@ struct stim: sc_module
         a.did       = 0;
         a.len       = 64;
         a.pri       = 0;
-        a.sport     = fid % g_inter_num;
+        a.sport     = fid % G_INTER_NUM;
         a.dport     = 0;
         a.qid       = 0;
         a.len2add   = 1;

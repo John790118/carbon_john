@@ -55,19 +55,19 @@ void stim :: stim_prc()
     int send_pkt_port;
     int drop_count;
     int token_count;
-    array<port_fifo,g_inter_num> port_fifo_inst;
-    array<token_bucket,g_inter_num> port_token_bucket;
+    array<port_fifo,G_INTER_NUM> port_fifo_inst;
+    array<token_bucket,G_INTER_NUM> port_token_bucket;
     array<token_bucket,FLOW_RULE_TAB_SIZE> flow_token_bucket;
     array<int,FLOW_RULE_TAB_SIZE> flow_sn;
 
-    for(int i=0; i<g_inter_num; i++)
+    for(int i=0; i<G_INTER_NUM; i++)
     {
         port_fifo_inst[i].pntr = 0;
         port_fifo_inst[i].full = false;
         port_fifo_inst[i].empty = true;
     }
 
-    for(int i=0; i<g_inter_num; i++)
+    for(int i=0; i<G_INTER_NUM; i++)
     {
         port_token_bucket[i].token = 0;
     }
@@ -95,7 +95,7 @@ void stim :: stim_prc()
     while(1)
 //    while(pkt_send_count < SEND_FILE_CYCLE)
     {
-        if(token_count < (g_freq/50))
+        if(token_count < (G_FREQ/50))
         {
             token_count++;
         }
@@ -103,7 +103,7 @@ void stim :: stim_prc()
         {
             token_count = 0;
             // add token to port token bucket
-            for(int i=0; i<g_inter_num; i++)
+            for(int i=0; i<G_INTER_NUM; i++)
             {
                 port_token_bucket[i].add_token(125);   // 1000Mbps=125MBPS
             }
@@ -156,7 +156,7 @@ void stim :: stim_prc()
         }
 
         // output desc packet to each port
-        for(int send_port=0; send_port<g_inter_num; send_port++)
+        for(int send_port=0; send_port<G_INTER_NUM; send_port++)
         {
             //output pkt_data
             pkt_desc_tmp = port_fifo_inst[send_port].pkt_pre_val();
