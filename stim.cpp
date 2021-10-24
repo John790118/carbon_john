@@ -58,6 +58,7 @@ void stim :: stim_prc()
     array<port_fifo,g_inter_num> port_fifo_inst;
     array<token_bucket,g_inter_num> port_token_bucket;
     array<token_bucket,FLOW_RULE_TAB_SIZE> flow_token_bucket;
+    array<int,FLOW_RULE_TAB_SIZE> flow_sn;
 
     for(int i=0; i<g_inter_num; i++)
     {
@@ -76,22 +77,11 @@ void stim :: stim_prc()
         flow_token_bucket[i].token = 0;
     }
 
-    //vector<s_flow_rule>  g_flow_rule_tab;
-    s_flow_rule a;
-    for(int fid=0; fid<FLOW_RULE_TAB_SIZE; fid++)
+    for(int i=0; i<FLOW_RULE_TAB_SIZE; i++)
     {
-        a.sid       = fid*4;
-        a.did       = 0;
-        a.len       = 64;
-        a.pri       = 0;
-        a.sport     = fid % g_inter_num;
-        a.dport     = 0;
-        a.qid       = 0;
-        a.len2add   = 1;
-        a.flow_speed= 30;
-
-        g_flow_rule_tab.push_back(a);
+        flow_sn[i] = 0;
     }
+
  
     ofstream pkt_sender_file;
 //    pkt_sender_file.open("pkt_sender_file.log");
@@ -135,7 +125,7 @@ void stim :: stim_prc()
                 pkt_desc_tmp.fid  = -1;
                 pkt_desc_tmp.sid  = g_flow_rule_tab[fid].sid;
                 pkt_desc_tmp.did  = g_flow_rule_tab[fid].did;
-                pkt_desc_tmp.fsn  = pkt_send_count;
+                pkt_desc_tmp.fsn  = flow_sn[fid];
                 pkt_desc_tmp.len  = g_flow_rule_tab[fid].len;
                 pkt_desc_tmp.pri  = g_flow_rule_tab[fid].pri;
                 pkt_desc_tmp.sport= g_flow_rule_tab[fid].sport;
@@ -152,10 +142,14 @@ void stim :: stim_prc()
                     if(port_fifo_inst[send_pkt_port].full == true) 
                     {
                         drop_count++;
-                        cout << "****Dropped packets: " << dec << drop_count << endl;
+                        cout << "****Port" << send_pkt_port 
+                            << " dropped packets: " << dec << drop_count << endl;
                     }
                     else
+                    {
                         port_fifo_inst[send_pkt_port].pkt_in(pkt_desc_tmp);
+                        flow_sn[fid] = flow_sn[fid] + 1;
+                    }
                 pkt_send_count++;
                 }
             }
@@ -170,6 +164,7 @@ void stim :: stim_prc()
                 && (port_token_bucket[send_port].read_token() >= pkt_desc_tmp.len))
             {
                 pkt_desc_tmp = port_fifo_inst[send_port].pkt_out();
+                port_token_bucket[send_port].sub_token(pkt_desc_tmp.len);
                 out_pkt_stim[send_port].write(pkt_desc_tmp);
                 cout << "@" << in_clk_cnt << "_clks stim sent =>:"
                     << pkt_desc_tmp << endl;

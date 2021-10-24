@@ -7,7 +7,7 @@
 #include "comm_def.h" 
 #include <string>
 #include <iostream>
-#define SEND_FILE_NUM 32
+#define SEND_FILE_NUM 64
 #define FLOW_RULE_TAB_SIZE 16
 
 struct stim: sc_module
@@ -21,6 +21,7 @@ struct stim: sc_module
   //信号
 //  std::array<s_pkt_desc, g_inter_num> pkt_desc_tmp;  
   s_pkt_desc pkt_desc_tmp;  
+  s_flow_rule a;
 
   //std::array<array<s_pkt_desc, FLOW_RULE_TAB_SIZE>,g_inter_num> fifo_regs;
   //std::array<bool,g_inter_num> fifo_full;
@@ -43,6 +44,22 @@ struct stim: sc_module
     pkt_desc_tmp.csn     = -1;
     pkt_desc_tmp.sop     = false;
     pkt_desc_tmp.eop     = false;
+
+    //vector<s_flow_rule>  g_flow_rule_tab;
+    for(int fid=0; fid<FLOW_RULE_TAB_SIZE; fid++)
+    {
+        a.sid       = fid;
+        a.did       = 0;
+        a.len       = 64;
+        a.pri       = 0;
+        a.sport     = fid % g_inter_num;
+        a.dport     = 0;
+        a.qid       = 0;
+        a.len2add   = 1;
+        a.flow_speed= 64;
+
+        g_flow_rule_tab.push_back(a);
+    }
 
     SC_THREAD(stim_prc);
     sensitive << in_clk_cnt;

@@ -25,11 +25,14 @@ void stat :: stat_prc()
 //        }
         for(int i=0; i < g_inter_num; i++)
         {
-            temp_val[i] = pkt_in[i].read();
-            cout << "@" << in_clk_cnt << "_clks stim receive =>:"
-                << temp_val[i] << endl;
-            pkt_receiver_file << "@" << in_clk_cnt << "_clks stim receive =>:"
-                << temp_val[i];
+            if(pkt_in[i].event())
+            {
+                temp_val[i] = pkt_in[i].read();
+                cout << "@" << in_clk_cnt << "_clks stata receive =>:"
+                    << temp_val[i] << endl;
+                pkt_receiver_file << "@" << in_clk_cnt << "_clks stat receive =>:"
+                    << temp_val[i];
+            }
         }
 
         //cout << "               ........................" << endl;
