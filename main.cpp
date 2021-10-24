@@ -18,7 +18,7 @@ int sc_main(int argc, char *argv[])
    
 //   string pkt_sender_outfile_str = "pkt_sender_outfile0.log";
 //   char * pkt_sender_filename0 = (char*)pkt_sender_outfile_str.c_str();
-   char *pkt_sender_filename = (char*)"pkt_sender_file.log";
+//   char *pkt_sender_filename = (char*)"pkt_sender_file.log";
 
    sc_clock clock1("CLOCK1", (1000/G_FREQ), SC_NS, 0.5, 0.0, SC_NS);
 
@@ -32,7 +32,7 @@ int sc_main(int argc, char *argv[])
    for(int i=0; i<G_INTER_NUM; i++)
       mod_stim->out_pkt_stim[i](sig_pkt_in[i]);
 //   mod_stim->pkt_inprt = 0;
-   mod_stim->pkt_sender_filename = pkt_sender_filename;
+//   mod_stim->pkt_sender_filename = pkt_sender_filename;
 
    stat * mod_stat;
    mod_stat= new stat("MODE_STAT");

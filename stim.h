@@ -16,7 +16,8 @@ struct stim: sc_module
   sc_in<int> in_clk_cnt;
   std::array<sc_out<s_pkt_desc>, G_INTER_NUM> out_pkt_stim;  
 //  int   pkt_inprt;
-  char* pkt_sender_filename;
+//  char* pkt_sender_filename;
+   char *pkt_sender_filename = (char*)"pkt_sender_file.log";
 
   //信号
 //  std::array<s_pkt_desc, G_INTER_NUM> pkt_desc_tmp;  
