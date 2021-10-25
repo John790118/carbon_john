@@ -1,9 +1,7 @@
-
-
-#include <stdlib.h>
-#include <time.h>
-#include "pkt.h"
-#include "comm_def.h"
+//#include <stdlib.h>
+//#include <time.h>
+//#include "pkt.h"
+//#include "comm_def.h"
 #include "stat.h" 
 
 void stat :: stat_prc()

@@ -95,7 +95,8 @@ void stim :: stim_prc()
     while(1)
 //    while(pkt_send_count < SEND_FILE_CYCLE)
     {
-        if(token_count < (G_FREQ/50))
+//        if(token_count < (G_FREQ/50))
+        if(token_count < G_FREQ)
         {
             token_count++;
         }

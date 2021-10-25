@@ -1,5 +1,3 @@
-
-
 #ifndef __STIM_H__
 #define __STIM_H__
 

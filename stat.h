@@ -1,5 +1,3 @@
-
-
 #ifndef __STAT_H__
 #define __STAT_H__
 
